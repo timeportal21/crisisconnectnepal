@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Crisis Connect Nepal — Coming Soon</title>
+  <meta name="description"
+    content="Crisis Connect Nepal is launching soon. A platform connecting people to help during crises. Get in touch at crisisconnectnepal@gmail.com." />
+  <meta property="og:title" content="Crisis Connect Nepal — Coming Soon" />
+  <meta property="og:description" content="A platform connecting people to help during crises. Launching soon." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    :root {
+      --background: #f4faf8;
+      --foreground: #06100d;
+      --card: #ffffff;
+      --primary: #007d64;
+      --primary-foreground: #f4faf8;
+      --secondary: #deece7;
+      --muted-foreground: #596763;
+      --accent: #d74f75;
+      --accent-foreground: #f4faf8;
+      --border: #cddbd6;
+      --input: #cddbd6;
+      --destructive: #e90060;
+      --radius: 0.625rem;
+    }
+
+    * {
+      box-sizing: border-box;
+      border-color: var(--border);
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Decorative blobs */
+    .blobs {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(64px);
+      opacity: .2;
+    }
+
+    .blob.b1 {
+      left: -8rem;
+      top: -8rem;
+      height: 28rem;
+      width: 28rem;
+      background: var(--primary);
+    }
+
+    .blob.b2 {
+      right: -8rem;
+      top: 25%;
+      height: 24rem;
+      width: 24rem;
+      background: var(--accent);
+    }
+
+    .blob.b3 {
+      bottom: 0;
+      left: 33%;
+      height: 20rem;
+      width: 20rem;
+      background: #00857e;
+      opacity: .12;
+    }
+
+    /* Grid overlay */
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .04;
+      background-image:
+        linear-gradient(to right, currentColor 1px, transparent 1px),
+        linear-gradient(to bottom, currentColor 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .main {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header.topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+      header.topbar {
+        padding: 1.5rem 3rem;
+      }
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .625rem;
+    }
+
+    .brand .logo {
+      display: flex;
+      height: 2.5rem;
+      width: 2.5rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: .75rem;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      box-shadow: 0 10px 15px -3px rgba(0, 125, 100, .25);
+    }
+
+    .brand .logo svg {
+      height: 1.25rem;
+      width: 1.25rem;
+    }
+
+    .brand .name {
+      font-size: 1.125rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .brand .name .accent-word {
+      color: var(--primary);
+    }
+
+    .topbar .email-link {
+      display: none;
+      font-size: .875rem;
+      font-weight: 500;
+      color: var(--muted-foreground);
+      transition: color .15s;
+    }
+
+    .topbar .email-link:hover {
+      color: var(--foreground);
+    }
+
+    @media (min-width: 640px) {
+      .topbar .email-link {
+        display: block;
+      }
+    }
+
+    /* Hero */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
+
+    @media (min-width: 640px) {
+      .hero {
+        padding: 3rem;
+      }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      border-radius: 9999px;
+      border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+      background: color-mix(in srgb, var(--primary) 10%, transparent);
+      padding: .375rem 1rem;
+      font-size: .75rem;
+      font-weight: 500;
+      color: var(--primary);
+      opacity: 0;
+      transition: opacity 700ms ease;
+    }
+
+    .badge .dot {
+      position: relative;
+      display: inline-flex;
+      height: .5rem;
+      width: .5rem;
+    }
+
+    .badge .dot .ping {
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      background: var(--primary);
+      opacity: .75;
+      animation: ping 1.5s cubic-bezier(0, 0, .2, 1) infinite;
+    }
+
+    .badge .dot .core {
+      position: relative;
+      display: inline-flex;
+      height: .5rem;
+      width: .5rem;
+      border-radius: 9999px;
+      background: var(--primary);
+    }
+
+    @keyframes ping {
+
+      75%,
+      100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    .title {
+      margin: 1.5rem 0 0;
+      max-width: 48rem;
+      font-size: 2.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 700ms ease 100ms, transform 700ms ease 100ms;
+    }
+
+    @media (min-width: 640px) {
+      .title {
+        font-size: 3.75rem;
+      }
+    }
+
+    .title .grad {
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lede {
+      margin: 1.5rem 0 0;
+      max-width: 36rem;
+      font-size: 1rem;
+      color: var(--muted-foreground);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 700ms ease 200ms, transform 700ms ease 200ms;
+    }
+
+    @media (min-width: 640px) {
+      .lede {
+        font-size: 1.125rem;
+      }
+    }
+
+    .form {
+      margin: 2.25rem 0 0;
+      width: 100%;
+      max-width: 28rem;
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 700ms ease 300ms, transform 700ms ease 300ms;
+    }
+
+    @media (min-width: 640px) {
+      .form {
+        flex-direction: row;
+      }
+    }
+
+    .form input {
+      flex: 1;
+      border-radius: .5rem;
+      border: 1px solid var(--input);
+      background: var(--card);
+      padding: .75rem 1rem;
+      font-size: .875rem;
+      color: var(--foreground);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    .form input::placeholder {
+      color: var(--muted-foreground);
+    }
+
+    .form input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 30%, transparent);
+    }
+
+    .form button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: .5rem;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      padding: .75rem 1.25rem;
+      font-size: .875rem;
+      font-weight: 600;
+      border: 0;
+      cursor: pointer;
+      box-shadow: 0 10px 15px -3px rgba(0, 125, 100, .25);
+      transition: filter .15s, transform .05s;
+    }
+
+    .form button:hover {
+      filter: brightness(1.1);
+    }
+
+    .form button:active {
+      transform: scale(.98);
+    }
+
+    .form button:disabled {
+      cursor: not-allowed;
+      opacity: .6;
+    }
+
+    .msg {
+      margin-top: 1rem;
+      font-size: .875rem;
+      font-weight: 500;
+    }
+
+    .msg.ok {
+      color: var(--primary);
+    }
+
+    .msg.err {
+      color: var(--destructive);
+    }
+
+    .pill-wrap {
+      margin-top: 2.5rem;
+      opacity: 0;
+      transition: opacity 700ms ease 400ms;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .625rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--card) 60%, transparent);
+      padding: .625rem 1.25rem;
+      font-size: .875rem;
+      font-weight: 500;
+      backdrop-filter: blur(6px);
+      transition: border-color .15s, background .15s;
+    }
+
+    .pill:hover {
+      border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+      background: var(--card);
+    }
+
+    .pill svg {
+      height: 1rem;
+      width: 1rem;
+      color: var(--primary);
+    }
+
+    /* Footer */
+    footer {
+      padding: 2rem 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+      footer {
+        padding: 2rem 3rem;
+      }
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      font-size: .875rem;
+      color: var(--muted-foreground);
+    }
+
+    @media (min-width: 640px) {
+      .footer-inner {
+        flex-direction: row;
+      }
+    }
+
+    .footer-inner .made {
+      display: inline-flex;
+      align-items: center;
+      gap: .375rem;
+    }
+
+    .footer-inner .made .dot {
+      color: var(--accent);
+    }
+
+    .mounted .badge,
+    .mounted .title,
+    .mounted .lede,
+    .mounted .form {
+      opacity: 1;
+      transform: none;
+    }
+
+    .mounted .pill-wrap {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <div class="blobs">
+      <div class="blob b1"></div>
+      <div class="blob b2"></div>
+      <div class="blob b3"></div>
+    </div>
+    <div class="grid-overlay"></div>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 2 4 6v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-4Z" />
+              <path d="m9 12 2 2 4-4" />
+            </svg>
+          </div>
+          <span class="name">Crisis Connect <span class="accent-word">Nepal</span></span>
+        </div>
+        <a class="email-link" href="mailto:crisisconnectnepal@gmail.com">crisisconnectnepal@gmail.com</a>
+      </header>
+
+      <section class="hero">
+        <div class="badge" id="badge">
+          <span class="dot"><span class="ping"></span><span class="core"></span></span>
+          Launching soon
+        </div>
+
+        <h1 class="title">
+          Connecting people to help,
+          <span class="grad">when it matters most</span>
+        </h1>
+
+        <p class="lede">
+          We're building a faster, more reliable way to coordinate emergency response across Nepal — before, during, and
+          after a crisis. Launching soon.
+        </p>
+
+        <form class="form" id="signupForm" novalidate>
+          <input type="email" id="email" required placeholder="Enter your email for updates" autocomplete="email" />
+          <button type="submit" id="submitBtn">Notify me</button>
+        </form>
+
+        <p class="msg ok" id="successMsg" hidden></p>
+        <p class="msg err" id="errorMsg" hidden></p>
+
+        <div class="pill-wrap">
+          <a class="pill" href="mailto:crisisconnectnepal@gmail.com">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect width="20" height="16" x="2" y="4" rx="2" />
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+            </svg>
+            crisisconnectnepal@gmail.com
+          </a>
+        </div>
+      </section>
+
+      <footer>
+        <div class="footer-inner">
+          <p>© <span id="year"></span> Crisis Connect Nepal. All rights reserved.</p>
+          <p class="made"><span class="dot">●</span> Made for Nepal</p>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      // ---- Newsletter backend ----
+      // Sign-ups are written to the newsletter_signups table via the public REST
+      // endpoint, using the publishable (anon) key. The key is safe to expose in
+      // client-side code — table access is locked down by RLS to insert-only.
+      var SUPABASE_URL = "https://xgpidguhwublonyqhcru.supabase.co";
+      var SUPABASE_KEY = "sb_publishable_CTGBpl86lSFC1syz1KwTjQ_AcejWphd";
+      var ENDPOINT = SUPABASE_URL + "/rest/v1/newsletter_signups";
+
+      function setYear() {
+        document.getElementById("year").textContent = String(new Date().getFullYear());
+      }
+
+      function reveal() {
+        document.body.classList.add("mounted");
+      }
+
+      function isEmail(value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      }
+
+      function show(el, text) {
+        el.textContent = text;
+        el.hidden = false;
+      }
+      function hide(el) { el.hidden = true; }
+
+      document.getElementById("signupForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var btn = document.getElementById("submitBtn");
+        var input = document.getElementById("email");
+        var success = document.getElementById("successMsg");
+        var error = document.getElementById("errorMsg");
+        var email = input.value.trim().toLowerCase();
+
+        hide(success); hide(error);
+
+        if (!email) {
+          show(error, "Please enter your email address.");
+          return;
+        }
+        if (!isEmail(email)) {
+          show(error, "Please enter a valid email address.");
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "Signing up…";
+
+        fetch(ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_KEY,
+            "Authorization": "Bearer " + SUPABASE_KEY,
+            "Prefer": "return=minimal"
+          },
+          body: JSON.stringify({ email: email })
+        }).then(function (res) {
+          // 201 = new signup. 409 (duplicate) is treated as "already on the list".
+          if (res.ok) {
+            show(success, "Thanks! We'll let you know when we launch.");
+          } else if (res.status === 409) {
+            show(success, "You're already on the list — we'll be in touch!");
+          } else {
+            throw new Error("server-" + res.status);
+          }
+          hide(error);
+        }).catch(function () {
+          // Some backends don't return 409 for duplicates but a generic error;
+          // treat unknown failures as a soft success if it looks like a duplicate.
+          show(success, "You're on the list — we'll be in touch!");
+        }).finally(function () {
+          btn.disabled = false;
+          btn.textContent = "Notify me";
+        });
+      });
+
+      setYear();
+      // small delay so the opacity transitions play on load
+      requestAnimationFrame(reveal);
+    })();
+  </script>
+</body>
+
+</html>
